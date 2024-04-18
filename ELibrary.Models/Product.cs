@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 namespace ELibrary.Models;
 
@@ -37,6 +38,8 @@ public sealed class Product
 
 
     public int CategoryId { get; set; }
+
+    [ValidateNever]
     public Category Category { get; set; } = null!;
     public string? ImageUrl { get; set; }
 }

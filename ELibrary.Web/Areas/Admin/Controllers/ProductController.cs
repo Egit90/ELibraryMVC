@@ -1,6 +1,8 @@
 using ELibrary.DataAccess.Repository.IRepositories;
 using ELibrary.Models;
+using ELibrary.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace ELibrary.Web.Areas.Admin.Controllers;
 
@@ -13,14 +15,25 @@ public class ProductController(IUnitOfWork unitOfWork) : Controller
 
     public async Task<IActionResult> Index()
     {
-        var data = await _unitOfWork.Product.GetAllAsync();
+        var data = await _unitOfWork.Product.GetProductsWithCategoryName();
+
+        Console.WriteLine("******************************************************************** \n", data, "******************************************************************** \n");
+
+
         return View(data);
     }
 
 
-    public IActionResult Create()
+    public async Task<IActionResult> Create()
     {
-        return View();
+        var Cat = await _unitOfWork.Category.GetAllAsync();
+        IEnumerable<SelectListItem> CatList = Cat.Select(u => new SelectListItem
+        {
+            Text = u.Name,
+            Value = u.Id.ToString()
+        });
+        ViewBag.CategoryList = CatList;
+        return View(new ProductVM { Product = new Product(), CategoryList = CatList });
     }
 
     [HttpPost]
