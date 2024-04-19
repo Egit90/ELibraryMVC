@@ -484,3 +484,7 @@ $RECYCLE.BIN/
 *.swp
 
 *.db
+
+
+ELibrary.Web/wwwroot/images/product/*.*
+ELibrary.Web/wwwroot/images/product/*.*

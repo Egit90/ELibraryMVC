@@ -17,7 +17,7 @@ public class ProductController(IUnitOfWork unitOfWork, IWebHostEnvironment webHo
 
     public async Task<IActionResult> Index()
     {
-        var data = await _unitOfWork.Product.GetProductDtoList();
+        var data = await _unitOfWork.Product.GetListOfProductDtoAsync();
 
         return View(data);
     }
@@ -116,7 +116,7 @@ public class ProductController(IUnitOfWork unitOfWork, IWebHostEnvironment webHo
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        var dataList = await _unitOfWork.Product.GetProductDtoList();
+        var dataList = await _unitOfWork.Product.GetListOfProductDtoAsync();
 
         return Json(new { data = dataList });
 
