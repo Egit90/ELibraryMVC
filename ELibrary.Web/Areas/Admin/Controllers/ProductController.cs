@@ -3,6 +3,8 @@ using System.Text.Json.Serialization;
 using ELibrary.DataAccess.Repository.IRepositories;
 using ELibrary.Models;
 using ELibrary.Models.ViewModels;
+using ELibrary.Utility;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -10,6 +12,7 @@ namespace ELibrary.Web.Areas.Admin.Controllers;
 
 
 [Area("Admin")]
+[Authorize(Roles = SD.Role_Admin)]
 public class ProductController(IUnitOfWork unitOfWork, IWebHostEnvironment webHostEnvironment) : Controller
 {
     private readonly IUnitOfWork _unitOfWork = unitOfWork;

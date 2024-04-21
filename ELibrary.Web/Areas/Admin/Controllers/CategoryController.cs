@@ -1,10 +1,13 @@
 using ELibrary.DataAccess.Repository.IRepositories;
 using ELibrary.Models;
+using ELibrary.Utility;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ELibrary.Web.Areas.Admin.Controllers;
 
 [Area("Admin")]
+[Authorize(Roles = SD.Role_Admin)]
 public class CategoryController(ILogger<CategoryController> logger, IUnitOfWork unitOfWork) : Controller
 {
     private readonly ILogger<CategoryController> _logger = logger;
