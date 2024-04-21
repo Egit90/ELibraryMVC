@@ -10,6 +10,7 @@ public class UnitOfWork(DataContext dataContext) : IUnitOfWork
 
     public ICategoryRepository Category => new CategoryRepository(_dataContext);
     public IProductRepository Product => new ProductRepository(_dataContext);
+    public ICompanyRepository Company => new CompanyRepository(_dataContext);
 
     public async Task SaveAsync()
     {

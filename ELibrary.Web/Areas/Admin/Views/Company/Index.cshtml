@@ -1,0 +1,35 @@
+@using ELibrary.Models.Dto;
+@model List<Company>
+
+<div class="container">
+    <div class="row pt-4 pb-2">
+        <div class="row pt-4 pb-2">
+            <div class="col-6">
+                <h2 class="text-primary">Product List</h2>
+            </div>
+            <div class="col-6 text-end">
+                <a asp-asp-controller="Product" asp-action="Upsert" class="btn btn-primary">
+                    <i class="bi bi-plus-circle"></i> Add New Product
+                </a>
+            </div>
+        </div>
+    </div>
+    <table id="myTable" class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>StreetAddress</th>
+                <th>City</th>
+                <th>State</th>
+                <th>PostalCode</th>
+                <th>PhoneNumber</th>
+                <th></th>
+            </tr>
+        </thead>
+    </table>
+</div>
+
+
+@section Scripts {
+    <script src="~/js/company.js"></script>
+}
