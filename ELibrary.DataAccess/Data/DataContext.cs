@@ -12,6 +12,7 @@ public class DataContext(DbContextOptions<DataContext> options) : IdentityDbCont
     public DbSet<Product> Products { get; set; }
     public DbSet<ApplicationUser> ApplicationUsers { get; set; }
     public DbSet<Company> Companies { get; set; }
+    public DbSet<ShoppingCart> ShoppingCarts { get; set; }
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -26,6 +27,13 @@ public class DataContext(DbContextOptions<DataContext> options) : IdentityDbCont
                         new Category { Id = 3, Name = "History", DisplayOrder = 3 }
                     );
 
+
+        modelBuilder.Entity<Company>()
+                    .HasData(
+                        new Company { Id = Guid.NewGuid(), Name = "Company A", StreetAddress = "789 dsa", City = "Jacksonville", State = "Fl", PostalCode = "65557", PhoneNumber = "9045796633" },
+                        new Company { Id = Guid.NewGuid(), Name = "Company B", StreetAddress = "54321 gew", City = "Miami", State = "Fl", PostalCode = "32225", PhoneNumber = "9045796633" },
+                        new Company { Id = Guid.NewGuid(), Name = "Company C", StreetAddress = "5321 dse4", City = "OakLeaf", State = "Fl", PostalCode = "7798", PhoneNumber = "9045796633" }
+                    );
 
         modelBuilder.Entity<Product>()
                     .HasData(

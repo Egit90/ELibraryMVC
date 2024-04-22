@@ -3,6 +3,7 @@ using System;
 using ELibrary.DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ELibrary.DataAccess.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20240421222455_CompaniesSeedData")]
+    partial class CompaniesSeedData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.4");
@@ -88,7 +91,7 @@ namespace ELibrary.DataAccess.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("1466b07a-08f1-45ac-a361-35545c2c50c5"),
+                            Id = new Guid("b1c54021-ca90-4533-addd-490068c1dfb4"),
                             City = "Jacksonville",
                             Name = "Company A",
                             PhoneNumber = "9045796633",
@@ -98,7 +101,7 @@ namespace ELibrary.DataAccess.Migrations
                         },
                         new
                         {
-                            Id = new Guid("92e505ad-6c7c-4dd0-b031-5658a03edd03"),
+                            Id = new Guid("8312ecf7-93ab-4c2c-b129-aed7119a7d1a"),
                             City = "Miami",
                             Name = "Company B",
                             PhoneNumber = "9045796633",
@@ -108,7 +111,7 @@ namespace ELibrary.DataAccess.Migrations
                         },
                         new
                         {
-                            Id = new Guid("a6ebefbf-dd47-49ac-978e-4cc522a664fe"),
+                            Id = new Guid("986921ab-2789-48e5-b31a-916ed45f357f"),
                             City = "OakLeaf",
                             Name = "Company C",
                             PhoneNumber = "9045796633",
@@ -243,30 +246,6 @@ namespace ELibrary.DataAccess.Migrations
                             Price50 = 22.0,
                             Title = "Leaves and Wonders"
                         });
-                });
-
-            modelBuilder.Entity("ELibrary.Models.ShoppingCart", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ApplicationUserId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("Count")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ApplicationUserId");
-
-                    b.HasIndex("ProductId");
-
-                    b.ToTable("ShoppingCarts");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -477,9 +456,6 @@ namespace ELibrary.DataAccess.Migrations
                     b.Property<string>("City")
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid?>("CompanyId")
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -493,8 +469,6 @@ namespace ELibrary.DataAccess.Migrations
                     b.Property<string>("StreetAddress")
                         .HasColumnType("TEXT");
 
-                    b.HasIndex("CompanyId");
-
                     b.HasDiscriminator().HasValue("ApplicationUser");
                 });
 
@@ -507,23 +481,6 @@ namespace ELibrary.DataAccess.Migrations
                         .IsRequired();
 
                     b.Navigation("Category");
-                });
-
-            modelBuilder.Entity("ELibrary.Models.ShoppingCart", b =>
-                {
-                    b.HasOne("ELibrary.Models.ApplicationUser", "ApplicationUser")
-                        .WithMany()
-                        .HasForeignKey("ApplicationUserId");
-
-                    b.HasOne("ELibrary.Models.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ApplicationUser");
-
-                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -575,15 +532,6 @@ namespace ELibrary.DataAccess.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("ELibrary.Models.ApplicationUser", b =>
-                {
-                    b.HasOne("ELibrary.Models.Company", "Company")
-                        .WithMany()
-                        .HasForeignKey("CompanyId");
-
-                    b.Navigation("Company");
                 });
 
             modelBuilder.Entity("ELibrary.Models.Category", b =>

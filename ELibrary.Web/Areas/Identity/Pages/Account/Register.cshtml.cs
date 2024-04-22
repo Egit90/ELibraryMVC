@@ -10,6 +10,7 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading;
 using System.Threading.Tasks;
+using ELibrary.DataAccess.Repository.IRepositories;
 using ELibrary.Models;
 using ELibrary.Utility;
 using Microsoft.AspNetCore.Authentication;
@@ -35,6 +36,7 @@ namespace ELibrary.Web.Areas.Identity.Pages.Account
         private readonly IUserEmailStore<IdentityUser> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
+        private readonly IUnitOfWork _unitOfWork;
 
         public RegisterModel(
             UserManager<IdentityUser> userManager,
@@ -42,7 +44,8 @@ namespace ELibrary.Web.Areas.Identity.Pages.Account
             SignInManager<IdentityUser> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender,
-            RoleManager<IdentityRole> roleManager
+            RoleManager<IdentityRole> roleManager,
+            IUnitOfWork unitOfWork
             )
         {
             _userManager = userManager;
@@ -52,6 +55,7 @@ namespace ELibrary.Web.Areas.Identity.Pages.Account
             _logger = logger;
             _emailSender = emailSender;
             _roleManager = roleManager;
+            _unitOfWork = unitOfWork;
         }
 
         /// <summary>
@@ -120,6 +124,8 @@ namespace ELibrary.Web.Areas.Identity.Pages.Account
             public string? PostalCode { get; set; }
             public string? PhoneNumber { get; set; }
 
+            public Guid? CompanyId { get; set; }
+            public IEnumerable<SelectListItem> CompaniesList { get; set; }
         }
 
 
@@ -133,14 +139,18 @@ namespace ELibrary.Web.Areas.Identity.Pages.Account
                 await _roleManager.CreateAsync(new IdentityRole(SD.Role_Admin));
                 await _roleManager.CreateAsync(new IdentityRole(SD.Role_Employee));
             }
-
             Input = new()
             {
                 RoleList = await _roleManager.Roles.Select(r => new SelectListItem
                 {
                     Text = r.Name,
                     Value = r.Name
-                }).ToListAsync()
+                }).ToListAsync(),
+                CompaniesList = (await _unitOfWork.Company.GetAllAsync()).Select(r => new SelectListItem
+                {
+                    Text = r.Name,
+                    Value = r.Id.ToString()
+                })
             };
 
 
@@ -166,6 +176,11 @@ namespace ELibrary.Web.Areas.Identity.Pages.Account
                 user.State = Input.State;
                 user.PostalCode = Input.PostalCode;
                 user.PhoneNumber = Input.PhoneNumber;
+
+                if (Input.Role == SD.Role_Company)
+                {
+                    user.CompanyId = Input.CompanyId;
+                }
 
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
