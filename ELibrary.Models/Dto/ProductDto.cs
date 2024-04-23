@@ -13,4 +13,5 @@ public sealed class ProductDto
     public double Price100 { get; set; }
     public string ISBN { get; set; } = null!;
     public int Id { get; set; }
+    public int Count { get; set; }
 }

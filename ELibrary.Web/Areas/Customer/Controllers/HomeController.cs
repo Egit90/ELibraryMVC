@@ -2,6 +2,9 @@ using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using ELibrary.Models;
 using ELibrary.DataAccess.Repository.IRepositories;
+using ELibrary.Models.Dto;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace ELibrary.Web.Areas.Customer.Controllers;
 
@@ -21,6 +24,37 @@ public class HomeController(ILogger<HomeController> logger, IUnitOfWork unitOfWo
     {
         var product = await _unitOfWork.Product.GetProductDtoAsync(id);
         return View(product);
+    }
+
+    [HttpPost]
+    [Authorize]
+    public async Task<IActionResult> Detail(ProductDto product)
+    {
+        var user = User.FindFirst(ClaimTypes.NameIdentifier);
+
+        if (user == null)
+        {
+            return NotFound();
+        }
+
+        var existCart = await _unitOfWork.ShoppingCart.GetAsync(x => x.ApplicationUserId == user.Value.ToString() && x.ProductId == product.Id);
+
+        // Shopping Cart Exist
+        if (existCart != null)
+        {
+            existCart.Count += product.Count;
+        }
+        else
+        {
+            await _unitOfWork.ShoppingCart.AddAsync(new ShoppingCart
+            {
+                ApplicationUserId = user.Value,
+                Count = product.Count,
+                ProductId = product.Id
+            });
+        }
+        await _unitOfWork.SaveAsync();
+        return RedirectToAction(nameof(Index));
     }
 
 

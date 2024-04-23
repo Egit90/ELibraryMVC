@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace ELibrary.DataAccess.Migrations
+namespace ELibrary.DataAccess.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
     partial class DataContextModelSnapshot : ModelSnapshot
@@ -88,7 +88,7 @@ namespace ELibrary.DataAccess.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("1466b07a-08f1-45ac-a361-35545c2c50c5"),
+                            Id = new Guid("0fe253b3-b3dc-4852-8ae6-85e0d265a1b3"),
                             City = "Jacksonville",
                             Name = "Company A",
                             PhoneNumber = "9045796633",
@@ -98,7 +98,7 @@ namespace ELibrary.DataAccess.Migrations
                         },
                         new
                         {
-                            Id = new Guid("92e505ad-6c7c-4dd0-b031-5658a03edd03"),
+                            Id = new Guid("7979f3a7-69ab-4bba-8b9d-1013213d6a7c"),
                             City = "Miami",
                             Name = "Company B",
                             PhoneNumber = "9045796633",
@@ -108,7 +108,7 @@ namespace ELibrary.DataAccess.Migrations
                         },
                         new
                         {
-                            Id = new Guid("a6ebefbf-dd47-49ac-978e-4cc522a664fe"),
+                            Id = new Guid("bb053086-fe37-4b8f-a830-32d7eaf4c75e"),
                             City = "OakLeaf",
                             Name = "Company C",
                             PhoneNumber = "9045796633",
@@ -252,6 +252,7 @@ namespace ELibrary.DataAccess.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ApplicationUserId")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<int>("Count")
@@ -513,7 +514,9 @@ namespace ELibrary.DataAccess.Migrations
                 {
                     b.HasOne("ELibrary.Models.ApplicationUser", "ApplicationUser")
                         .WithMany()
-                        .HasForeignKey("ApplicationUserId");
+                        .HasForeignKey("ApplicationUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("ELibrary.Models.Product", "Product")
                         .WithMany()
