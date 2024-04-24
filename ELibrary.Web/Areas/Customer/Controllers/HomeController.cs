@@ -53,6 +53,7 @@ public class HomeController(ILogger<HomeController> logger, IUnitOfWork unitOfWo
                 ProductId = product.Id
             });
         }
+        TempData["success"] = "Cart Updated Successfully";
         await _unitOfWork.SaveAsync();
         return RedirectToAction(nameof(Index));
     }
