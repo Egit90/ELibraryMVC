@@ -15,6 +15,10 @@ public class UnitOfWork(DataContext dataContext) : IUnitOfWork
 
     public IApplicationUserRepository ApplicationUserRepository => new ApplicationUserRepository(_dataContext);
 
+    public IOrderDetailRepository OrderDetailRepository => new OrderDetailRepository(_dataContext);
+
+    public IOrderHeaderRepository OrderHeaderRepository => new OrderHeaderRepository(_dataContext);
+
     public async Task SaveAsync()
     {
         await _dataContext.SaveChangesAsync();

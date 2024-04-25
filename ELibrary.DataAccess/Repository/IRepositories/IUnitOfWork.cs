@@ -7,5 +7,7 @@ public interface IUnitOfWork
     ICompanyRepository Company { get; }
     IShoppingCartRepository ShoppingCart { get; }
     IApplicationUserRepository ApplicationUserRepository { get; }
+    IOrderDetailRepository OrderDetailRepository { get; }
+    IOrderHeaderRepository OrderHeaderRepository { get; }
     Task SaveAsync();
 }
