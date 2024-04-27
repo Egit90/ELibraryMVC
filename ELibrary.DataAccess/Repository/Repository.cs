@@ -15,6 +15,12 @@ public class Repository<T>(DataContext dataContext) : IRepository<T> where T : c
         await _dataContext.Set<T>().AddAsync(entity);
     }
 
+    public async Task AddRangeAsync(IEnumerable<T> entity)
+    {
+        await _dataContext.Set<T>().AddRangeAsync(entity);
+    }
+
+
     public async Task<IEnumerable<T>> GetAllAsync()
     {
         return await _dataContext.Set<T>().ToListAsync();

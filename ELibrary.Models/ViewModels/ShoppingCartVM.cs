@@ -1,4 +1,5 @@
 using ELibrary.Models.Dto;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 namespace ELibrary.Models.ViewModels;
 
@@ -6,6 +7,11 @@ public sealed class ShoppingCartVM
 {
 
     public IEnumerable<ProductDto> ShoppingCartList { get; set; }
+
+    public OrderHeader OrderHeader { get; set; }
+    public Guid OrderHeaderId { get; set; }
+
+    [ValidateNever]
     public double OrderTotal
     {
         get
@@ -13,7 +19,8 @@ public sealed class ShoppingCartVM
             double s = 0;
             foreach (var item in ShoppingCartList)
             {
-                s += GetItemPriceBasedOnQty(item.Count, item.Price, item.Price50, item.Price100);
+                s += GetItemPriceBasedOnQty(item.Count, item.Price, item.Price50,
+                item.Price100);
             }
             return s;
         }

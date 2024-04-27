@@ -8,4 +8,7 @@ public interface IShoppingCartRepository : IRepository<ShoppingCart>
 {
     void Update(ShoppingCart shoppingCart);
     Task<ShoppingCartVM> GetShoppingCartItemsByCustomer(string CustomerId);
+    Task<IEnumerable<ShoppingCart>> GetAllCartItems(string CustomerId);
+    void RemoveShoppingCart(string CustomerId);
+
 }

@@ -13,11 +13,11 @@ public class UnitOfWork(DataContext dataContext) : IUnitOfWork
     public ICompanyRepository Company => new CompanyRepository(_dataContext);
     public IShoppingCartRepository ShoppingCart => new ShoppingCartRepository(_dataContext);
 
-    public IApplicationUserRepository ApplicationUserRepository => new ApplicationUserRepository(_dataContext);
+    public IApplicationUserRepository ApplicationUser => new ApplicationUserRepository(_dataContext);
 
-    public IOrderDetailRepository OrderDetailRepository => new OrderDetailRepository(_dataContext);
+    public IOrderDetailRepository OrderDetail => new OrderDetailRepository(_dataContext);
 
-    public IOrderHeaderRepository OrderHeaderRepository => new OrderHeaderRepository(_dataContext);
+    public IOrderHeaderRepository OrderHeader => new OrderHeaderRepository(_dataContext);
 
     public async Task SaveAsync()
     {

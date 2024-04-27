@@ -33,7 +33,7 @@
                                     <label>Name</label>
                                 </div>
                                 <div class="col-9">
-                                    <input class="form-control" />
+                                    <input asp-for="@Model.OrderHeader.Name" class="form-control" />
                                 </div>
                             </div>
                             <div class="row my-1">
@@ -41,7 +41,7 @@
                                     <label>Phone</label>
                                 </div>
                                 <div class="col-9">
-                                    <input class="form-control" />
+                                    <input asp-for="@Model.OrderHeader.PhoneNumber" class="form-control" />
                                 </div>
                             </div>
                             <div class="row my-1">
@@ -49,7 +49,7 @@
                                     <label>Street Address</label>
                                 </div>
                                 <div class="col-9">
-                                    <input class="form-control" />
+                                    <input asp-for="@Model.OrderHeader.StreetAddress" class="form-control" />
                                 </div>
                             </div>
                             <div class="row my-1">
@@ -57,7 +57,7 @@
                                     <label>City</label>
                                 </div>
                                 <div class="col-9">
-                                    <input class="form-control" />
+                                    <input asp-for="@Model.OrderHeader.City" class="form-control" />
                                 </div>
                             </div>
                             <div class="row my-1">
@@ -65,7 +65,7 @@
                                     <label>State</label>
                                 </div>
                                 <div class="col-9">
-                                    <input class="form-control" />
+                                    <input asp-for="@Model.OrderHeader.State" class="form-control" />
                                 </div>
                             </div>
                             <div class="row my-1">
@@ -73,7 +73,7 @@
                                     <label>Postal Code</label>
                                 </div>
                                 <div class="col-9">
-                                    <input class="form-control" />
+                                    <input asp-for="@Model.OrderHeader.PostalCode" class="form-control" />
                                 </div>
                             </div>
                         </div>
@@ -93,16 +93,11 @@
                                         item.Price,
                                         item.Price50, item.Price100) / item.Count).ToString("c")) </span>
                                     </li>
-
-
-                                    <li class="list-group-item d-flex justify-content-between bg-light">
-                                        <small class="text-info">Total (USD)</small>
-                                        <strong class="text-info">@Model.OrderTotal</strong>
-                                    </li>
                                 }
-
-
-
+                                <li class="list-group-item d-flex justify-content-between bg-light">
+                                    <small class="text-info">Total (USD)</small>
+                                    <strong class="text-info">@Model.OrderTotal.ToString("c")</strong>
+                                </li>
                             </ul>
                         </div>
                     </div>
@@ -112,7 +107,7 @@
                 <div class="row">
                     <div class="col-12 col-md-8 pt-2">
                         <p style="color:maroon; font-size:14px;">Estimate Arrival Date:
-
+                            @DateTime.Now.AddDays(7).ToShortDateString() - @DateTime.Now.AddDays(14).ToShortDateString()
                         </p>
                     </div>
                     <div class="col-12 col-md-4">
