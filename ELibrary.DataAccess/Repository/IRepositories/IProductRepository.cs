@@ -6,6 +6,7 @@ namespace ELibrary.DataAccess.Repository.IRepositories;
 public interface IProductRepository : IRepository<Product>
 {
     void Update(Product product);
+
     Task<IEnumerable<ProductDto>> GetListOfProductDtoAsync();
     Task<ProductDto?> GetProductDtoAsync(int id);
 }

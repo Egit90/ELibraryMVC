@@ -6,6 +6,7 @@ using ELibrary.Utility;
 using Humanizer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Stripe.Checkout;
 
 namespace ELibrary.Web.Areas.Customer.Controllers;
 
@@ -85,8 +86,7 @@ public sealed class CartController(IUnitOfWork unitOfWork) : Controller
         var existCart = await _unitOfWork.ShoppingCart.GetShoppingCartItemsByCustomer(user.Value);
         var ds = OrderDetail.CreateOrderDetail(existCart, orderHeader.Id);
         await _unitOfWork.OrderDetail.AddRangeAsync(ds);
-        _unitOfWork.ShoppingCart.RemoveShoppingCart(user.Value);
-        await _unitOfWork.SaveAsync();
+
 
 
 
@@ -94,14 +94,83 @@ public sealed class CartController(IUnitOfWork unitOfWork) : Controller
         if (ApplicationUser!.CompanyId.GetValueOrDefault() == Guid.Empty)
         {
             //stripe
+            var domain = "http://localhost:5290/";
+
+            var options = new Stripe.Checkout.SessionCreateOptions
+            {
+                SuccessUrl = domain + $"customer/cart/OrderConfirmation?id={orderHeader.Id}",
+                CancelUrl = domain + $"customer/cart/index",
+                LineItems = [],
+                Mode = "payment",
+            };
+
+            foreach (var item in existCart.ShoppingCartList)
+            {
+                var sessionLineItemOptions = new SessionLineItemOptions
+                {
+                    PriceData = new SessionLineItemPriceDataOptions()
+                    {
+                        UnitAmount = (long)(ShoppingCartVM.GetItemPriceBasedOnQty(item.Count, item.Price, item.Price50, item.Price100) * 100),
+                        Currency = "usd",
+                        ProductData = new SessionLineItemPriceDataProductDataOptions
+                        {
+                            Name = item.Title,
+                        }
+                    },
+                    Quantity = item.Count
+                };
+                options.LineItems.Add(sessionLineItemOptions);
+            }
+
+
+
+            var service = new SessionService();
+            var session = service.Create(options);
+
+            _unitOfWork.OrderHeader.UpdateStripePaymentID(orderHeader.Id, session.Id, session.PaymentIntentId);
+            await _unitOfWork.SaveAsync();
+
+            Response.Headers.Append("Location", session.Url);
+
+            return new StatusCodeResult(303);
         }
 
         return RedirectToAction(nameof(OrderConfirmation), new { id = orderHeader.Id });
     }
 
 
-    public IActionResult OrderConfirmation(Guid id)
+    public async Task<IActionResult> OrderConfirmation(Guid id)
     {
+        var user = User.FindFirst(ClaimTypes.NameIdentifier);
+
+        if (user == null)
+        {
+            return NotFound();
+        }
+
+        var orderHeader = await _unitOfWork.OrderHeader.GetAsync(u => u.Id == id);
+
+        if (orderHeader == null)
+        {
+            return NotFound();
+        }
+
+        if (orderHeader.PaymentStatus != SD.PaymentStatusDelayedPayment)
+        {
+            var service = new SessionService();
+            var session = await service.GetAsync(orderHeader.SessionId);
+            if (session.PaymentStatus.Equals("paid", StringComparison.CurrentCultureIgnoreCase))
+            {
+                // update DB Payment is successful
+                _unitOfWork.OrderHeader.UpdateStripePaymentID(orderHeader.Id, session.Id, session.PaymentIntentId);
+                _unitOfWork.OrderHeader.UpdateStatus(id, SD.StatusApproved, SD.PaymentStatusApproved);
+                await _unitOfWork.SaveAsync();
+
+                // Remove cart items
+                _unitOfWork.ShoppingCart.RemoveShoppingCart(user.Value);
+                await _unitOfWork.SaveAsync();
+            }
+        }
         return View(id);
     }
 

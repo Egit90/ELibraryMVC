@@ -22,6 +22,7 @@ public sealed class OrderHeader
     public DateTime PaymentDate { get; set; }
     public DateOnly PaymentDateDueDate { get; set; }
 
+    public string? SessionId { get; set; }
     public string? PaymentIntentId { get; set; }
 
     public string? PhoneNumber { get; set; }
