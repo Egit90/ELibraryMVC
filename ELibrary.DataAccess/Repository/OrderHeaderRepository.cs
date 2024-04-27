@@ -1,11 +1,26 @@
 using ELibrary.DataAccess.Data;
 using ELibrary.DataAccess.Repository.IRepositories;
 using ELibrary.Models;
+using ELibrary.Models.Dto;
+using Microsoft.EntityFrameworkCore;
 
 namespace ELibrary.DataAccess.Repository;
 
 public sealed class OrderHeaderRepository(DataContext dataContext) : Repository<OrderHeader>(dataContext), IOrderHeaderRepository
 {
+    public async Task<List<OrderDto>> GetOrdersDto()
+    {
+        return await _dataContext.OrderHeaders.Select(v => new OrderDto
+        {
+            Id = v.Id,
+            Name = v.ApplicationUser.Name,
+            Email = v.ApplicationUser.Email,
+            PhoneNumber = v.ApplicationUser.PhoneNumber,
+            Status = v.PaymentStatus,
+            Total = v.OrderTotal,
+        }).ToListAsync();
+    }
+
     public void Update(OrderHeader OrderHeader)
     {
         _dataContext.OrderHeaders.Update(OrderHeader);

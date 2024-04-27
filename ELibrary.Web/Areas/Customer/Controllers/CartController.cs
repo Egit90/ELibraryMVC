@@ -55,9 +55,10 @@ public sealed class CartController(IUnitOfWork unitOfWork) : Controller
             return NotFound();
         }
 
+        // get car list of products
         CartVMProp.ShoppingCartList = (await _unitOfWork.ShoppingCart.GetShoppingCartItemsByCustomer(user.Value)).ShoppingCartList;
 
-        // Create ORder Header
+        // Create Order Header
         var orderHeader = new OrderHeader();
         orderHeader = CartVMProp.OrderHeader;
         orderHeader.ApplicationUserId = user.Value;
